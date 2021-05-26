@@ -31,6 +31,9 @@ jobs:
       - run:
           name: Deploy Code
           command: ./scripts/ci-deploy.sh
+      - run:
+          name: rollout app
+          command: kubectl rollout status deployment/do-kubernetes-sample-app
            
 workflows:
   version: 2
