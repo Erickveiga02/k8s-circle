@@ -18,7 +18,11 @@ jobs:
           command: |
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
             docker push $IMAGE_NAME:latest
-
+    deploy:
+      docker:
+        - image: circleci/buildpack-deps:stretch
+      working_directory: ~/app
+      steps:
       - run:
           name: Install envsubst
           command: |
@@ -31,12 +35,17 @@ jobs:
       - run:
           name: Deploy Code
           command: ./scripts/ci-deploy.sh
+   
            
 workflows:
   version: 2
   build-master:
     jobs:
       - build:
+          filters:
+            branches:
+              only: master
+      - deploy:
           filters:
             branches:
               only: master
